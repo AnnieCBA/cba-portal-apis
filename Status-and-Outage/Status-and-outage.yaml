@@ -1,0 +1,374 @@
+openapi: 3.0.1
+info:
+  title: CommBank Status and Outages APIs
+  description: ""
+  version: ""
+servers:
+- url: https://api.commbank.com.au/public/cds-au/v1/discovery
+tags:
+- name: Discovery API
+  description: Obtain the status and the list of scheduled outages for the CommBank
+    Open Banking APIs.</p><h3 style="margin-top:30px;">Host URL</h3><p>CommBank requests
+    are passed to the URL <span class="sc-1noysbl-9 JKaaQ">https://api.commbank.com.au/public/cds-au/v1/discovery</span></p><p>CBA
+    – CommBiz requests are passed to the URL <span class="sc-1noysbl-9 JKaaQ">https://cdr.commbiz.api.commbank.com.au/cbzpublic/cds-au/v1/discovery</span></p>
+paths:
+  /status:
+    get:
+      tags:
+      - Discovery API
+      summary: Get Status
+      description: Obtain a health check status for the implementation
+      operationId: getStatus
+      parameters:
+      - name: x-v
+        in: header
+        description: Version of the API end point being requested.
+        schema:
+          type: integer
+      - name: x-min-v
+        in: header
+        description: Minimum version of the API end point you are requesting.
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Success
+          headers:
+            x-v:
+              description: Version of the API end point responded with.
+              schema:
+                type: integer
+            x-min-v:
+              description: Minimum version of the API end point you are requesting.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseCommonDiscoveryStatus'
+        400:
+          description: Bad Request
+          headers:
+            x-v:
+              description: Version of the API end point responded with.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse400'
+        406:
+          description: Not Acceptable
+          headers:
+            x-v:
+              description: Version of the API end point responded with.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse406'
+        500:
+          description: Internal Server Error
+          headers:
+            x-v:
+              description: Version of the API end point responded with.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+  /outages:
+    get:
+      tags:
+      - Discovery API
+      summary: Get Outages
+      description: Obtain a list of scheduled outages for implementation
+      operationId: getOutages
+      parameters:
+      - name: x-v
+        in: header
+        description: Version of the API end point being requested.
+        schema:
+          type: integer
+      - name: x-min-v
+        in: header
+        description: Minimum version of the API end point you are requesting.
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Success
+          headers:
+            x-v:
+              description: Version of the API end point responded with.
+              schema:
+                type: integer
+            x-min-v:
+              description: Minimum version of the API end point you are requesting.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDiscoveryOutagesList'
+        400:
+          description: Bad Request
+          headers:
+            x-v:
+              description: Version of the API end point responded with.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse400'
+        406:
+          description: Not Acceptable
+          headers:
+            x-v:
+              description: Version of the API end point responded with.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse406'
+        500:
+          description: Internal Server Error
+          headers:
+            x-v:
+              description: Version of the API end point responded with.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+components:
+  schemas:
+    ResponseCommonDiscoveryStatus:
+      required:
+      - data
+      - links
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ResponseCommonDiscoveryStatus_data'
+        links:
+          $ref: '#/components/schemas/Links'
+        meta:
+          $ref: '#/components/schemas/Meta'
+      example:
+        data:
+          status: OK
+          updateTime: 2020-03-02T03:53:33.6159975Z
+        links:
+          self: https://api.commbank.com.au/public/cds-au/v1/discovery/status
+        meta: {}
+    ResponseCommonDiscoveryStatus_data:
+      required:
+      - status
+      - updateTime
+      type: object
+      properties:
+        status:
+          type: string
+          description: The current status of the API.
+          enum:
+          - OK
+          - PARTIAL_FAILURE
+          - UNAVAILABLE
+          - SCHEDULED_OUTAGE
+        explanation:
+          type: string
+          description: An explanation of the current outage.
+        detectionTime:
+          type: string
+          description: The date and time that the current outage was detected.
+          x-cds-type: DateTimeString
+        expectedResolutionTime:
+          type: string
+          description: The date and time that full service is expected to resume (if
+            known).
+          x-cds-type: DateTimeString
+        updateTime:
+          type: string
+          description: The date and time that this status was last updated by the
+            Data Holder.
+          x-cds-type: DateTimeString
+    ResponseDiscoveryOutagesList:
+      required:
+      - data
+      - links
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ResponseDiscoveryOutagesList_data'
+        links:
+          $ref: '#/components/schemas/Links'
+        meta:
+          $ref: '#/components/schemas/Meta'
+      example:
+        data:
+          outages: []
+        links:
+          self: https://api.commbank.com.au/public/cds-au/v1/discovery/outages
+        meta: {}
+    DiscoveryOutage:
+      required:
+      - duration
+      - explanation
+      - outageTime
+      type: object
+      properties:
+        outageTime:
+          type: string
+          description: Date and time that the outage is scheduled to begin
+          x-cds-type: DateTimeString
+        duration:
+          type: string
+          description: Planned duration of the outage
+          x-cds-type: ExternalRef
+        isPartial:
+          type: boolean
+          description: Flag that indicates the outage is only partial
+        explanation:
+          type: string
+          description: An explanation of the current outage
+    ResponseDiscoveryOutagesList_data:
+      required:
+      - outages
+      type: object
+      properties:
+        outages:
+          type: array
+          description: List of scheduled outages
+          items:
+            $ref: '#/components/schemas/DiscoveryOutage'
+    Links:
+      required:
+      - self
+      type: object
+      properties:
+        self:
+          type: string
+          description: Fully qualified link to this API call.
+    LinksPaginated:
+      required:
+      - self
+      type: object
+      properties:
+        self:
+          type: string
+          description: Fully qualified link to this API call.
+        first:
+          type: string
+          description: URI to the first page of this set.
+        prev:
+          type: string
+          description: URI to the previous page of this set.
+        next:
+          type: string
+          description: URI to the next page of this set.
+        last:
+          type: string
+          description: URI to the last page of this set.
+      x-conditional:
+      - prev
+      - next
+      - first
+      - last
+    Meta:
+      type: object
+    MetaPaginated:
+      required:
+      - totalPages
+      - totalRecords
+      type: object
+      properties:
+        totalRecords:
+          type: integer
+          description: The total number of records in the full set.
+          x-cds-type: NaturalNumber
+        totalPages:
+          type: integer
+          description: The total number of pages in the full set.
+          x-cds-type: NaturalNumber
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+    ErrorResponse400:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+      example:
+        errors:
+        - code: SA-RH-01
+          title: x-v is invalid
+          detail: x-v header must be a supported version number.
+    ErrorResponse406:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+      example:
+        errors:
+        - code: SA-RH-01
+          title: x-v is invalid
+          detail: x-v header must be a supported version number.
+        - code: SA-RH-02
+          title: x-min-v is invalid
+          detail: x-min-v header must be a supported version number.
+    ErrorResponse500:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+      example:
+        errors:
+        - code: SA-IS-01
+          title: Server Error
+          detail: An error has occurred whilst processing your request. Please try
+            again later.
+    ResponseNoBody:
+      type: object
+      example: {}
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        title:
+          type: string
+        detail:
+          type: string
+  parameters:
+    ParamXVHeader:
+      name: x-v
+      in: header
+      description: Version of the API end point being requested.
+      schema:
+        type: integer
+    ParamXMinVHeader:
+      name: x-min-v
+      in: header
+      description: Minimum version of the API end point you are requesting.
+      schema:
+        type: integer
+x-tagGroups:
+- name: ""
+  tags:
+  - Discovery API

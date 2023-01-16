@@ -1,0 +1,856 @@
+openapi: 3.0.1
+info:
+  title: CommBank Payees API
+  description: ""
+  version: ""
+servers:
+- url: https://secure.api.commbank.com.au/api/cds-au/v1/banking
+tags:
+- name: Payees API
+  description: "Obtain a list of pre-registered payees authorised to be shared by\
+    \ the customer. \n\nPayees API is a consumer API. To access data you'll need the\
+    \ customer's consent.</p><h3 style=\"margin-top:30px;\">Host URL</h3>All requests\
+    \ are passed to the URL <span class=\"sc-1noysbl-9 JKaaQ\">https://secure.api.commbank.com.au/api/cds-au/v1/banking</span></p>"
+paths:
+  /payees:
+    get:
+      tags:
+      - Payees API
+      summary: Get Payees
+      description: Obtain a list of pre-registered payees
+      operationId: listPayees
+      parameters:
+      - name: type
+        in: query
+        description: Filter on the payee type field.
+        schema:
+          type: string
+          default: ALL
+          enum:
+          - BILLER
+          - DOMESTIC
+          - INTERNATIONAL
+          - ALL
+      - name: page
+        in: query
+        description: Page number being requested
+        schema:
+          type: integer
+          default: 1
+      - name: page-size
+        in: query
+        description: Number of records to return with the page
+        schema:
+          maximum: 1000
+          minimum: 1
+          type: integer
+          default: 25
+      - name: x-v
+        in: header
+        description: Version of the API end point being requested.
+        schema:
+          type: integer
+      - name: x-min-v
+        in: header
+        description: Minimum version of the API end point you are requesting.
+        schema:
+          type: integer
+      - name: x-fapi-interaction-id
+        in: header
+        description: Reflects the value of the Interaction ID in the request.
+        schema:
+          type: string
+      - name: x-fapi-auth-date
+        in: header
+        description: The time when the customer last logged in to the data recipient.
+        schema:
+          type: string
+      - name: x-fapi-customer-ip-address
+        in: header
+        description: The customer's original IP address if the customer is currently
+          logged in to the data recipient.
+        schema:
+          type: string
+      - name: x-cds-client-headers
+        in: header
+        description: The customer's original standard http headers encoded, including
+          the original User Agent header, if the customer is currently logged in to
+          the data recipient.
+        schema:
+          type: string
+          x-cds-type: Base64
+        x-cds-type: Base64
+      responses:
+        200:
+          description: Success
+          headers:
+            x-v:
+              description: Version of the API end point responded with.
+              schema:
+                type: integer
+            x-fapi-interaction-id:
+              description: Reflects the value of the Interaction ID in the request.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBankingPayeeList'
+        400:
+          description: Bad Request
+          headers:
+            x-v:
+              description: Version of the API end point responded with.
+              schema:
+                type: integer
+            x-fapi-interaction-Id:
+              description: Reflects the value of the Interaction ID in the request.
+              schema:
+                type: string
+            Content-Type:
+              description: Payload format responded with.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse400'
+        404:
+          description: Payee Not Found
+          headers:
+            x-v:
+              description: Version of the API end point responded with.
+              schema:
+                type: integer
+            x-fapi-interaction-Id:
+              description: Reflects the value of the Interaction ID in the request.
+              schema:
+                type: string
+            Content-Type:
+              description: Payload format responded with.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse404'
+        406:
+          description: Not Acceptable
+          headers:
+            x-v:
+              description: Version of the API end point responded with.
+              schema:
+                type: integer
+            x-fapi-interaction-Id:
+              description: Reflects the value of the Interaction ID in the request.
+              schema:
+                type: string
+            Content-Type:
+              description: Payload format responded with.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse406'
+        422:
+          description: Unprocessable Entity
+          headers:
+            x-v:
+              description: Version of the API end point responded with.
+              schema:
+                type: integer
+            x-fapi-interaction-Id:
+              description: Reflects the value of the Interaction ID in the request.
+              schema:
+                type: string
+            Content-Type:
+              description: Payload format responded with.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse422'
+        500:
+          description: Internal Server Error
+          headers:
+            x-v:
+              description: Version of the API end point responded with.
+              schema:
+                type: integer
+            x-fapi-interaction-Id:
+              description: Reflects the value of the Interaction ID in the request.
+              schema:
+                type: string
+            Content-Type:
+              description: Payload format responded with.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      x-scopes:
+      - bank:payees:read
+      x-version: "1"
+  /payees/{payeeId}:
+    get:
+      tags:
+      - Payees API
+      summary: Get Payee Detail
+      description: |-
+        Obtain detailed information on a single payee.
+
+        Note that the payee sub-structure should be selected to represent the payment destination only rather than any known characteristics of the payment recipient
+      operationId: getPayeeDetail
+      parameters:
+      - name: payeeId
+        in: path
+        description: The ID used to locate the details of a particular payee
+        required: true
+        schema:
+          type: string
+          x-cds-type: ASCIIString
+        x-cds-type: ASCIIString
+      - name: x-v
+        in: header
+        description: Version of the API end point being requested.
+        schema:
+          type: integer
+      - name: x-min-v
+        in: header
+        description: Minimum version of the API end point you are requesting.
+        schema:
+          type: integer
+      - name: x-fapi-interaction-id
+        in: header
+        description: Reflects the value of the Interaction ID in the request.
+        schema:
+          type: string
+      - name: x-fapi-auth-date
+        in: header
+        description: The time when the customer last logged in to the data recipient.
+        schema:
+          type: string
+      - name: x-fapi-customer-ip-address
+        in: header
+        description: The customer's original IP address if the customer is currently
+          logged in to the data recipient.
+        schema:
+          type: string
+      - name: x-cds-client-headers
+        in: header
+        description: The customer's original standard http headers encoded, including
+          the original User Agent header, if the customer is currently logged in to
+          the data recipient.
+        schema:
+          type: string
+          x-cds-type: Base64
+        x-cds-type: Base64
+      responses:
+        200:
+          description: Success
+          headers:
+            x-v:
+              description: Version of the API end point responded with.
+              schema:
+                type: integer
+            x-fapi-interaction-id:
+              description: Reflects the value of the Interaction ID in the request.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBankingPayeeById'
+        400:
+          description: Bad Request
+          headers:
+            x-v:
+              description: Version of the API end point responded with.
+              schema:
+                type: integer
+            x-fapi-interaction-Id:
+              description: Reflects the value of the Interaction ID in the request.
+              schema:
+                type: string
+            Content-Type:
+              description: Payload format responded with.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse400'
+        404:
+          description: Payee Not Found
+          headers:
+            x-v:
+              description: Version of the API end point responded with.
+              schema:
+                type: integer
+            x-fapi-interaction-Id:
+              description: Reflects the value of the Interaction ID in the request.
+              schema:
+                type: string
+            Content-Type:
+              description: Payload format responded with.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse404'
+        406:
+          description: Not Acceptable
+          headers:
+            x-v:
+              description: Version of the API end point responded with.
+              schema:
+                type: integer
+            x-fapi-interaction-Id:
+              description: Reflects the value of the Interaction ID in the request.
+              schema:
+                type: string
+            Content-Type:
+              description: Payload format responded with.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse406'
+        422:
+          description: Unprocessable Entity
+          headers:
+            x-v:
+              description: Version of the API end point responded with.
+              schema:
+                type: integer
+            x-fapi-interaction-Id:
+              description: Reflects the value of the Interaction ID in the request.
+              schema:
+                type: string
+            Content-Type:
+              description: Payload format responded with.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse422'
+        500:
+          description: Internal Server Error
+          headers:
+            x-v:
+              description: Version of the API end point responded with.
+              schema:
+                type: integer
+            x-fapi-interaction-Id:
+              description: Reflects the value of the Interaction ID in the request.
+              schema:
+                type: string
+            Content-Type:
+              description: Payload format responded with.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      x-scopes:
+      - bank:payees:read
+      x-version: "1"
+components:
+  schemas:
+    ResponseBankingPayeeList:
+      required:
+      - data
+      - links
+      - meta
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ResponseBankingPayeeList_data'
+        links:
+          $ref: '#/components/schemas/LinksPaginated'
+        meta:
+          $ref: '#/components/schemas/MetaPaginated'
+      example:
+        data:
+          payees:
+          - payeeId: "20353190"
+            nickname: HILL DL
+            type: DOMESTIC
+          - payeeId: "20354634"
+            nickname: belle
+            type: DOMESTIC
+          - payeeId: "20385340"
+            nickname: bta other cba
+            type: DOMESTIC
+          - payeeId: "20373598"
+            nickname: nicknametest10
+            type: BILLER
+          - payeeId: "20373587"
+            nickname: nicknametest
+            type: BILLER
+          - payeeId: "20373599"
+            nickname: nicknametest11
+            type: BILLER
+          - payeeId: "20373597"
+            nickname: nicknametest6
+            type: BILLER
+          - payeeId: "20348597"
+            nickname: wk
+            type: BILLER
+        links:
+          self: https://secure.api.commbank.com.au/api/cds-au/v1/banking/payees?page=1&page-size=25
+          first: https://secure.api.commbank.com.au/api/cds-au/v1/banking/payees?page=1&page-size=25
+          last: https://secure.api.commbank.com.au/api/cds-au/v1/banking/payees?page=1&page-size=25
+        meta:
+          totalRecords: 8
+          totalPages: 1
+    ResponseBankingPayeeList_data:
+      required:
+      - payees
+      type: object
+      properties:
+        payees:
+          type: array
+          description: The list of payees returned
+          items:
+            $ref: '#/components/schemas/BankingPayee'
+    BankingPayee:
+      required:
+      - nickname
+      - payeeId
+      - type
+      type: object
+      properties:
+        payeeId:
+          type: string
+          description: ID of the payee.
+          x-cds-type: ASCIIString
+        nickname:
+          type: string
+          description: The short display name of the payee as provided by the customer.
+        description:
+          type: string
+          description: A description of the payee provided by the customer.
+        type:
+          type: string
+          description: The type of payee.
+          enum:
+          - BILLER
+          - DOMESTIC
+          - INTERNATIONAL
+        creationDate:
+          type: string
+          description: The date the payee was created by the customer.
+          x-cds-type: DateString
+    ResponseBankingPayeeById:
+      required:
+      - data
+      - links
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/BankingPayeeDetail'
+        links:
+          $ref: '#/components/schemas/Links'
+        meta:
+          $ref: '#/components/schemas/Meta'
+      example:
+        data:
+          payeeUType: domestic
+          domestic:
+            payeeAccountUType: account
+            account:
+              accountName: HILL DL
+              bsb: "062000"
+              accountNumber: "13848189"
+          payeeId: nFZDTs-zBpDy4pUNdqeh70mn6yqGIjgim2grXukVWL8
+          nickname: HILL DL
+          type: DOMESTIC
+        links:
+          self: https://secure.api.commbank.com.au/api/cds-au/v1/banking/payees/nFZDTs-zBpDy4pUNdqeh70mn6yqGIjgim2grXukVWL8
+        meta: {}
+    BankingPayeeDetail:
+      allOf:
+      - $ref: '#/components/schemas/BankingPayee'
+      - required:
+        - payeeUType
+        type: object
+        properties:
+          payeeUType:
+            type: string
+            description: Type of object included that describes the payee in detail
+            enum:
+            - domestic
+            - biller
+            - international
+          domestic:
+            $ref: '#/components/schemas/BankingDomesticPayee'
+          biller:
+            $ref: '#/components/schemas/BankingBillerPayee'
+          international:
+            $ref: '#/components/schemas/BankingInternationalPayee'
+        x-conditional:
+        - domestic
+        - biller
+        - international
+    BankingDomesticPayee:
+      required:
+      - payeeAccountUType
+      type: object
+      properties:
+        payeeAccountUType:
+          type: string
+          description: Type of account object included.
+          enum:
+          - account
+          - card
+          - payId
+        account:
+          $ref: '#/components/schemas/BankingDomesticPayeeAccount'
+        card:
+          $ref: '#/components/schemas/BankingDomesticPayeeCard'
+        payId:
+          $ref: '#/components/schemas/BankingDomesticPayeePayId'
+      x-conditional:
+      - account
+      - card
+      - payId
+    BankingDomesticPayeeAccount:
+      required:
+      - accountNumber
+      - bsb
+      type: object
+      properties:
+        accountName:
+          type: string
+          description: Name of the account to pay to.
+        bsb:
+          type: string
+          description: BSB of the account to pay to.
+        accountNumber:
+          type: string
+          description: Number of the account to pay to.
+    BankingDomesticPayeeCard:
+      required:
+      - cardNumber
+      type: object
+      properties:
+        cardNumber:
+          type: string
+          description: Name of the account to pay to.
+          x-cds-type: MaskedPANString
+    BankingDomesticPayeePayId:
+      required:
+      - identifier
+      - type
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name assigned to the PayID by the owner of the PayID.
+        identifier:
+          type: string
+          description: The identifier of the PayID (dependent on type).
+        type:
+          type: string
+          description: The type of the PayID.
+          enum:
+          - ABN
+          - EMAIL
+          - ORG_IDENTIFIER
+          - TELEPHONE
+    BankingBillerPayee:
+      required:
+      - billerCode
+      - billerName
+      type: object
+      properties:
+        billerCode:
+          type: string
+          description: BPAY Biller Code of the Biller.
+        crn:
+          type: string
+          description: BPAY CRN of the Biller.
+        billerName:
+          type: string
+          description: Name of the Biller.
+      x-conditional:
+      - crn
+    BankingInternationalPayee:
+      required:
+      - bankDetails
+      - beneficiaryDetails
+      type: object
+      properties:
+        beneficiaryDetails:
+          $ref: '#/components/schemas/BankingInternationalPayee_beneficiaryDetails'
+        bankDetails:
+          $ref: '#/components/schemas/BankingInternationalPayee_bankDetails'
+    BankingInternationalPayee_beneficiaryDetails:
+      required:
+      - country
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the beneficiary.
+        country:
+          type: string
+          description: Country where the beneficiary resides.
+          x-cds-type: ExternalRef
+        message:
+          type: string
+          description: Response message for the payment.
+    BankingInternationalPayee_bankDetails:
+      required:
+      - accountNumber
+      - country
+      type: object
+      properties:
+        country:
+          type: string
+          description: Country of the recipient institution.
+          x-cds-type: ExternalRef
+        accountNumber:
+          type: string
+          description: Account Targeted for payment.
+        bankAddress:
+          $ref: '#/components/schemas/BankingInternationalPayee_bankDetails_bankAddress'
+        beneficiaryBankBIC:
+          type: string
+          description: Swift bank code.
+          x-cds-type: ExternalRef
+        fedWireNumber:
+          type: string
+          description: Number for Fedwire payment (Federal Reserve Wire Network).
+        sortCode:
+          type: string
+          description: Sort code used for account identification in some jurisdictions.
+        chipNumber:
+          type: string
+          description: Number for the Clearing House Interbank Payments System.
+        routingNumber:
+          type: string
+          description: International bank routing number.
+        legalEntityIdentifier:
+          type: string
+          description: The legal entity identifier (LEI) for the beneficiary.
+          x-cds-type: ExternalRef
+    BankingInternationalPayee_bankDetails_bankAddress:
+      required:
+      - address
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the recipient Bank.
+        address:
+          type: string
+          description: Address of the recipient Bank.
+    Links:
+      required:
+      - self
+      type: object
+      properties:
+        self:
+          type: string
+          description: Fully qualified link that generated the current response document.
+          x-cds-type: URIString
+    Meta:
+      type: object
+    LinksPaginated:
+      required:
+      - self
+      type: object
+      properties:
+        self:
+          type: string
+          description: Fully qualified link that generated the current response document.
+          x-cds-type: URIString
+        first:
+          type: string
+          description: URI to the first page of this set.
+          x-cds-type: URIString
+        prev:
+          type: string
+          description: URI to the previous page of this set.
+          x-cds-type: URIString
+        next:
+          type: string
+          description: URI to the next page of this set.
+          x-cds-type: URIString
+        last:
+          type: string
+          description: URI to the last page of this set.
+          x-cds-type: URIString
+      x-conditional:
+      - prev
+      - next
+      - first
+      - last
+    MetaPaginated:
+      required:
+      - totalPages
+      - totalRecords
+      type: object
+      properties:
+        totalRecords:
+          type: integer
+          description: The total number of records in the full set.
+          x-cds-type: NaturalNumber
+        totalPages:
+          type: integer
+          description: The total number of pages in the full set.
+          x-cds-type: NaturalNumber
+    ErrorResponse400:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+      example:
+        errors:
+        - code: PY-BR-02
+          title: page is invalid
+          detail: page must be a valid number.
+    ErrorResponse404:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+      example:
+        errors:
+        - code: PY-NF-01
+          title: Payee not found.
+          detail: No payee was found with that id.
+    ErrorResponse406:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+      example:
+        errors:
+        - code: PY-RH-03
+          title: x-v is invalid
+          detail: x-v header must be a supported version number.
+    ErrorResponse422:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+      example:
+        errors:
+        - Code: PY-UE-01
+          Title: page-size is Invalid
+          Detail: page-size must be a number and between 1 and 1000.
+    ErrorResponse500:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+      example:
+        errors:
+        - code: PY-IS-01
+          title: Server Error
+          detail: An error has occurred whilst processing your request. Please try
+            again later.
+    ResponseNoBody:
+      type: object
+      example: {}
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        title:
+          type: string
+        detail:
+          type: string
+  parameters:
+    ParamPage:
+      name: page
+      in: query
+      description: Page number being requested
+      schema:
+        type: integer
+        default: 1
+    ParamXFapiInterationId:
+      name: x-fapi-interaction-id
+      in: header
+      description: Reflects the value of the Interaction ID in the request.
+      schema:
+        type: string
+    ParamXFapiAuthDate:
+      name: x-fapi-auth-date
+      in: header
+      description: The time when the customer last logged in to the data recipient.
+      schema:
+        type: string
+    ParamXFapiCustomerIpAddress:
+      name: x-fapi-customer-ip-address
+      in: header
+      description: The customer's original IP address if the customer is currently
+        logged in to the data recipient.
+      schema:
+        type: string
+    ParamXCdsClientHeaders:
+      name: x-cds-client-headers
+      in: header
+      description: The customer's original standard http headers encoded, including
+        the original User Agent header, if the customer is currently logged in to
+        the data recipient.
+      schema:
+        type: string
+        x-cds-type: Base64
+      x-cds-type: Base64
+    ParamPageSize:
+      name: page-size
+      in: query
+      description: Number of records to return with the page
+      schema:
+        maximum: 1000
+        minimum: 1
+        type: integer
+        default: 25
+    ParamAcceptHeader:
+      name: Accept
+      in: header
+      description: Content-Type that is acceptable for the server's response.
+      required: true
+      schema:
+        type: string
+        enum:
+        - application/json
+    ParamXVHeader:
+      name: x-v
+      in: header
+      description: Version of the API end point being requested.
+      schema:
+        type: integer
+    ParamXMinVHeader:
+      name: x-min-v
+      in: header
+      description: Minimum version of the API end point you are requesting.
+      schema:
+        type: integer
+x-tagGroups:
+- name: ""
+  tags:
+  - Payees API
