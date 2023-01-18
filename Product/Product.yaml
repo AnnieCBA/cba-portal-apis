@@ -25,6 +25,7 @@ paths:
       summary: Get Products
       description: Retrieve summary level information of CommBank products
       operationId: listProducts
+      security: []
       parameters:
       - name: Accept
         in: header
@@ -228,6 +229,7 @@ paths:
       summary: Get Product Detail
       description: Retrieve detailed information on a single CommBank product.
       operationId: getProductDetail
+      security: []
       parameters:
       - name: Accept
         in: header
