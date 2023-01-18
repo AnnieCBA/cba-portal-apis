@@ -21,6 +21,7 @@ paths:
       summary: Get Direct Debits For Account
       description: Obtain direct debit authorisations for a specific account.
       operationId: listDirectDebits
+      security: []
       parameters:
       - name: accountId
         in: path
@@ -205,6 +206,7 @@ paths:
       summary: Get Bulk Direct Debits
       description: Obtain direct debit authorisations for multiple, filtered accounts.
       operationId: listDirectDebitsBulk
+      security: []
       parameters:
       - name: product-category
         in: query
@@ -419,6 +421,7 @@ paths:
       summary: Get Direct Debits For Specific Accounts
       description: Obtain direct debit authorisations for a specified list of accounts.
       operationId: listDirectDebitsSpecificAccounts
+      security: []
       parameters:
       - name: page
         in: query
@@ -603,6 +606,7 @@ paths:
       summary: Get Scheduled Payments for Account
       description: Obtain scheduled, outgoing payments for a specific account.
       operationId: listScheduledPayments
+      security: []
       parameters:
       - name: accountId
         in: path
@@ -788,6 +792,7 @@ paths:
       description: Obtain scheduled payments for multiple, filtered accounts that
         are the source of funds for the payments
       operationId: listScheduledPaymentsBulk
+      security: []
       parameters:
       - name: product-category
         in: query
@@ -1002,6 +1007,7 @@ paths:
       summary: Get Scheduled Payments For Specific Accounts
       description: Obtain scheduled payments for a specified list of accounts.
       operationId: listScheduledPaymentsSpecificAccounts
+      security: []
       parameters:
       - name: page
         in: query

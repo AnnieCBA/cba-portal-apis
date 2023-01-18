@@ -19,6 +19,7 @@ paths:
       summary: Get Payees
       description: Obtain a list of pre-registered payees
       operationId: listPayees
+      security: []
       parameters:
       - name: type
         in: query
@@ -204,6 +205,7 @@ paths:
 
         Note that the payee sub-structure should be selected to represent the payment destination only rather than any known characteristics of the payment recipient
       operationId: getPayeeDetail
+      security: []
       parameters:
       - name: payeeId
         in: path

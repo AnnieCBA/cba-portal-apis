@@ -23,6 +23,7 @@ paths:
       summary: Get Transactions
       description: Obtain transactions for a specific account
       operationId: getTransactions
+      security: []
       parameters:
       - name: accountId
         in: path
@@ -246,6 +247,7 @@ paths:
       summary: Get Transaction detail
       description: Obtain detailed information on a transaction for a specific account
       operationId: getTransactionDetail
+      security: []
       parameters:
       - name: accountId
         in: path

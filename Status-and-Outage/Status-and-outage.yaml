@@ -19,6 +19,7 @@ paths:
       summary: Get Status
       description: Obtain a health check status for the implementation
       operationId: getStatus
+      security: []
       parameters:
       - name: x-v
         in: header
@@ -86,6 +87,7 @@ paths:
       summary: Get Outages
       description: Obtain a list of scheduled outages for implementation
       operationId: getOutages
+      security: []
       parameters:
       - name: x-v
         in: header

@@ -19,6 +19,7 @@ paths:
       summary: Get customer
       description: Obtain basic information on the customer
       operationId: getCustomer
+      security: []
       parameters:
       - name: Accept
         in: header
@@ -174,6 +175,7 @@ paths:
       summary: Get Customer Detail
       description: Obtain detailed information on the customer.
       operationId: getCustomerDetail
+      security: []
       parameters:
       - name: Accept
         in: header

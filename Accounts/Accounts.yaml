@@ -21,6 +21,10 @@ paths:
       summary: Get Accounts
       description: Obtain a list of accounts
       operationId: listAccounts
+      security:
+        - main_auth:
+            - read:users
+        - api_key: []
       parameters:
       - name: product-category
         in: query
@@ -213,6 +217,10 @@ paths:
       summary: Get Account Detail
       description: Obtain detailed information on a single account
       operationId: getAccountDetail
+      security:
+        - main_auth:
+            - read:users
+        - api_key: []
       parameters:
       - name: accountId
         in: path
